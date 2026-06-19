@@ -1,0 +1,24 @@
+{
+  "version": "1.0",
+  "description": "AI Advisor Agent — Feature Backlog",
+  "active_feature": null,
+  "all_completed": false,
+  "features": [
+    {
+      "id": "feat-001",
+      "name": "基础功能链路搭建",
+      "status": "pending",
+      "description": "实现理解用户意图->多agent任务拆解/提取向量知识库中的知识->思考->工具调用->总结的基础功能",
+      "dependencies": [],
+      "verification": "运行 make check 验证功能完整性",
+      "done_criteria": [
+        "用户输入能被正确解析为意图",
+        "多agent任务拆解逻辑正常工作",
+        "向量知识库检索功能可用",
+        "工具调用机制实现",
+        "最终总结输出符合预期"
+      ],
+      "evidence": []
+    }
+  ]
+}
