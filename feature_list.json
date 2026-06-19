@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "description": "AI Advisor Agent — Feature Backlog",
-  "active_feature": "feat-001",
+  "active_feature": null,
   "all_completed": true,
   "features": [
     {
@@ -127,6 +127,22 @@
         "进化闭环能持续优化"
       ],
       "evidence": ["tests/test_feedback_loop_integration.py: 7/7 pass", "src/learning/feedback_loop_orchestrator.py"]
+    },
+    {
+      "id": "feat-009",
+      "name": "前端界面",
+      "status": "done",
+      "description": "实现ChatGPT/DeepSeek风格的前端界面，支持对话交互",
+      "dependencies": ["feat-001"],
+      "verification": "前端界面功能测试",
+      "done_criteria": [
+        "界面美观，符合现代AI对话UI风格",
+        "支持用户输入和AI回复展示",
+        "支持Markdown渲染",
+        "响应式布局适配不同屏幕",
+        "流式输出效果"
+      ],
+      "evidence": ["tests/test_frontend.py: 8/8 pass", "frontend/index.html", "frontend/css/style.css", "frontend/js/app.js", "server.py"]
     }
   ]
 }
