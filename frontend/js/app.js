@@ -136,54 +136,6 @@ class ChatApp {
                 },
                 body: JSON.stringify({
                     message: prompt,
-                    stream: true
-                })
-            });
-            
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            
-            const reader = response.body.getReader();
-            const decoder = new TextDecoder();
-            let fullContent = '';
-            
-            while (true) {
-                const { done, value } = await reader.read();
-                if (done) break;
-                
-                const chunk = decoder.decode(value);
-                const lines = chunk.split('\n');
-                
-                for (const line of lines) {
-                    if (line.startsWith('data: ')) {
-                        try {
-                            const data = JSON.parse(line.slice(6));
-                            if (data.content) {
-                                fullContent += data.content;
-                                this.updateMessageContent(messageElement, fullContent, true);
-                            }
-                            if (data.done) {
-                                this.removeTypingCursor(messageElement);
-                            }
-                        } catch (e) {
-                            // 忽略解析错误
-                        }
-                    }
-                }
-            }
-            
-            this.removeTypingCursor(messageElement);
-            
-        } catch (error) {
-            // 如果流式API不可用，使用普通API
-            const response = await fetch(this.apiEndpoint, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    message: prompt,
                     stream: false
                 })
             });
@@ -194,6 +146,10 @@ class ChatApp {
             
             const data = await response.json();
             this.updateMessageContent(messageElement, data.response || data.content || '无响应');
+            
+        } catch (error) {
+            console.error('API Error:', error);
+            this.updateMessageContent(messageElement, '抱歉，发生了错误。请稍后重试。');
         }
     }
     

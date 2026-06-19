@@ -90,11 +90,16 @@ class Orchestrator:
             if not task.tools_needed:
                 continue
             for tool_name in task.tools_needed:
-                result = await self.tool_executor.execute(
-                    tool_name,
-                    query=task.description,
-                    expression=task.description,
-                    code=task.description,
-                )
+                kwargs = {}
+                if tool_name == "search":
+                    kwargs = {"query": task.description}
+                elif tool_name == "calculate":
+                    kwargs = {"expression": task.description}
+                elif tool_name == "code_execute":
+                    kwargs = {"code": task.description}
+                else:
+                    kwargs = {"query": task.description}
+                
+                result = await self.tool_executor.execute(tool_name, **kwargs)
                 results.append(result)
         return results

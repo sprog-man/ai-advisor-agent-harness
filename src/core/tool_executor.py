@@ -48,11 +48,16 @@ class ToolRegistry:
 
     @staticmethod
     async def _tool_calculate(expression: str) -> str:
-        try:
-            result = eval(expression, {"__builtins__": {}}, {})
-            return f"计算结果: {expression} = {result}"
-        except Exception as e:
-            return f"计算错误: {e}"
+        import re
+        math_expr = re.search(r'[\d\+\-\*\/\(\)\.]+', expression)
+        if math_expr:
+            expr = math_expr.group()
+            try:
+                result = eval(expr, {"__builtins__": {}}, {})
+                return f"计算结果: {expr} = {result}"
+            except Exception as e:
+                return f"计算错误: {e}"
+        return f"无法从文本中提取数学表达式: {expression}"
 
     @staticmethod
     async def _tool_code_execute(code: str) -> str:
