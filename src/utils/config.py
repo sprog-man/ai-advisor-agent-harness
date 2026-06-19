@@ -4,11 +4,15 @@ import os
 from dataclasses import dataclass, field
 from typing import Optional
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 @dataclass
 class LLMConfig:
     provider: str = "openai"
-    model: str = "gpt-4"
+    model: str = "agnes-2.0-flash"
     api_key: Optional[str] = None
     base_url: Optional[str] = None
     temperature: float = 0.7
@@ -17,13 +21,15 @@ class LLMConfig:
     def __post_init__(self):
         if self.api_key is None:
             self.api_key = os.getenv("OPENAI_API_KEY")
+        if self.base_url is None:
+            self.base_url = os.getenv("OPENAI_BASE_URL")
 
 
 @dataclass
 class VectorDBConfig:
     provider: str = "chroma"
-    host: str = "localhost"
-    port: int = 8000
+    host: str = os.getenv("CHROMA_HOST", "localhost")
+    port: int = int(os.getenv("CHROMA_PORT", "8000"))
     collection_name: str = "advisor_knowledge"
 
 

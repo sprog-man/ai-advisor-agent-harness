@@ -31,7 +31,9 @@
 - [x] 实现feat-001基础功能链路 — Evidence: `src/core/`, `src/orchestrator.py`, `main.py`
 - [x] 创建虚拟环境.venv — Evidence: `.venv/`
 - [x] 安装依赖 — Evidence: `requirements.txt`
-- [x] 编写测试 — Evidence: `tests/test_core.py` (18 tests pass)
+- [x] 编写单元测试 — Evidence: `tests/test_core.py` (18 tests pass)
+- [x] 配置.env文件 — Evidence: `.env` (API密钥、数据库配置)
+- [x] 集成测试（真实API） — Evidence: `tests/test_integration.py` (3/3 pass)
 
 ### In Progress
 - [ ] 等待用户确认设计，开始实现feat-001
