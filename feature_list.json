@@ -143,6 +143,34 @@
         "流式输出效果"
       ],
       "evidence": ["tests/test_frontend.py: 8/8 pass", "frontend/index.html", "frontend/css/style.css", "frontend/js/app.js", "server.py"]
+    },
+    {
+      "id": "feat-010",
+      "name": "流式输出",
+      "status": "done",
+      "description": "实现SSE流式响应，支持AI逐字输出",
+      "dependencies": ["feat-009"],
+      "verification": "流式输出功能测试",
+      "done_criteria": [
+        "支持SSE流式响应",
+        "前端实时显示AI输出",
+        "打字机效果正常"
+      ],
+      "evidence": ["server.py", "frontend/js/app.js"]
+    },
+    {
+      "id": "feat-011",
+      "name": "用户知识库",
+      "status": "done",
+      "description": "实现用户知识库上传和检索功能",
+      "dependencies": ["feat-002"],
+      "verification": "知识库上传和检索测试",
+      "done_criteria": [
+        "支持文件上传",
+        "知识库文件列表展示",
+        "上传文件存储到向量库"
+      ],
+      "evidence": ["server.py (/api/knowledge/upload)", "frontend/index.html", "frontend/css/style.css"]
     }
   ]
 }
