@@ -39,7 +39,7 @@
     {
       "id": "feat-003",
       "name": "记忆记录与检索流程",
-      "status": "pending",
+      "status": "done",
       "description": "实现记忆记录（LLM提取关键信息转向量和三元组）和检索（向量库语义搜索+知识图谱精确查询，结果融合）流程",
       "dependencies": ["feat-002"],
       "verification": "记忆记录准确率测试，检索相关性测试",
@@ -50,7 +50,7 @@
         "知识图谱精确查询返回准确结果",
         "检索结果能正确融合"
       ],
-      "evidence": []
+      "evidence": ["tests/test_memory_retrieval.py: 7/7 pass", "src/memory/memory_recorder.py", "src/memory/memory_retriever.py"]
     },
     {
       "id": "feat-004",
