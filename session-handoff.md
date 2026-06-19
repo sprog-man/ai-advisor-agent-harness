@@ -2,7 +2,7 @@
 
 ## Current Objective
 
-- Goal: 实现feat-002热-温-冷三层记忆架构
+- Goal: 实现feat-003记忆记录与检索流程
 - Current status: 已完成
 - Branch: main
 
@@ -33,6 +33,8 @@
 - [x] 实现feat-002三层记忆架构
 - [x] 记忆模块单元测试（14/14 pass）
 - [x] 记忆模块集成测试（4/4 pass）
+- [x] 实现feat-003记忆记录与检索流程
+- [x] 记忆记录与检索单元测试（7/7 pass）
 
 ## Verification Evidence
 
@@ -43,6 +45,7 @@
 | `git push` | 成功 | 已推送到GitHub仓库 |
 | `pytest tests/test_core.py` | 18/18 pass | 虚拟环境中运行 |
 | `pytest tests/test_memory.py` | 14/14 pass | 虚拟环境中运行 |
+| `pytest tests/test_memory_retrieval.py` | 7/7 pass | 虚拟环境中运行 |
 | `tests/test_integration.py` | 3/3 pass | 真实API测试 |
 | `tests/test_memory_integration.py` | 4/4 pass | 真实API测试（embedding API不可用时降级） |
 
@@ -72,6 +75,7 @@
 - tests/test_integration.py
 - tests/test_memory.py
 - tests/test_memory_integration.py
+- tests/test_memory_retrieval.py
 - requirements.txt
 - .env (gitignored)
 - .venv/ (virtual environment)
@@ -79,6 +83,8 @@
 - src/memory/warm_memory.py
 - src/memory/cold_memory.py
 - src/memory/memory_manager.py
+- src/memory/memory_recorder.py
+- src/memory/memory_retriever.py
 - src/memory/__init__.py
 
 ## Decisions Made
@@ -102,7 +108,7 @@
 
 ## Recommended Next Step
 
-1. feat-002已完成，开始实现feat-003记忆记录与检索流程
-2. 解决embedding API问题（配置可用的embedding模型或使用本地embedding）
-3. 启动Chroma向量库服务以支持完整的向量搜索功能
-4. 开始实现feat-004反思机制
+1. feat-003已完成，开始实现feat-004反思机制
+2. 解决embedding API问题（配置可用的embedding模型）
+3. 集成memory_recorder到orchestrator实现自动记忆记录
+4. 开始实现feat-005 Bad Case闭环学习
