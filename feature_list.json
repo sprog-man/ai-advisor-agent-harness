@@ -87,7 +87,7 @@
     {
       "id": "feat-006",
       "name": "灰度测试与熔断机制",
-      "status": "pending",
+      "status": "done",
       "description": "实现影子模式评估、小流量切换、逐步放大的灰度测试，以及错误率/响应时间熔断机制",
       "dependencies": ["feat-001"],
       "verification": "灰度测试流程验证，熔断机制触发测试",
@@ -97,7 +97,7 @@
         "熔断机制能自动触发",
         "回滚功能正常"
       ],
-      "evidence": []
+      "evidence": ["tests/test_production.py: 13/13 pass", "src/production/gray_test.py", "src/production/circuit_breaker.py"]
     },
     {
       "id": "feat-007",

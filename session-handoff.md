@@ -2,7 +2,7 @@
 
 ## Current Objective
 
-- Goal: 实现feat-005 Bad Case闭环学习
+- Goal: 实现feat-006灰度测试与熔断机制
 - Current status: 已完成
 - Branch: main
 
@@ -39,6 +39,8 @@
 - [x] 反思机制单元测试（13/13 pass）
 - [x] 实现feat-005 Bad Case闭环学习
 - [x] Bad Case闭环学习单元测试（12/12 pass）
+- [x] 实现feat-006灰度测试与熔断机制
+- [x] 灰度测试与熔断机制单元测试（13/13 pass）
 
 ## Verification Evidence
 
@@ -112,7 +114,7 @@
 
 ## Recommended Next Step
 
-1. feat-005已完成，开始实现feat-006灰度测试与熔断机制
+1. feat-006已完成，开始实现feat-007权限控制与并发优化
 2. 集成所有模块到orchestrator
 3. 配置embedding API以支持完整向量搜索
-4. 开始实现feat-007权限控制与并发优化
+4. 开始实现feat-008反馈循环学习机制

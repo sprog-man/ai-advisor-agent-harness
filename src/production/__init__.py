@@ -1,12 +1,16 @@
-# Production safeguards
-from .gray_test import GrayTest
-from .circuit_breaker import CircuitBreaker
-from .permission_control import PermissionControl
-from .concurrency_optimizer import ConcurrencyOptimizer
+# Production modules
+from .gray_test import GrayTest, GrayTestConfig, GrayTestStats, DeploymentStage, ShadowComparison
+from .circuit_breaker import CircuitBreaker, CircuitBreakerConfig, CircuitState, CircuitStats, CircuitBreakerOpenError
 
 __all__ = [
     "GrayTest",
+    "GrayTestConfig",
+    "GrayTestStats",
+    "DeploymentStage",
+    "ShadowComparison",
     "CircuitBreaker",
-    "PermissionControl",
-    "ConcurrencyOptimizer",
+    "CircuitBreakerConfig",
+    "CircuitState",
+    "CircuitStats",
+    "CircuitBreakerOpenError",
 ]

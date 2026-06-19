@@ -43,13 +43,15 @@
 - [x] 反思机制单元测试 — Evidence: `tests/test_reflection.py` (13/13 pass)
 - [x] 实现feat-005 Bad Case闭环学习 — Evidence: `src/learning/`
 - [x] Bad Case闭环学习单元测试 — Evidence: `tests/test_learning.py` (12/12 pass)
+- [x] 实现feat-006灰度测试与熔断机制 — Evidence: `src/production/`
+- [x] 灰度测试与熔断机制单元测试 — Evidence: `tests/test_production.py` (13/13 pass)
 
 ### In Progress
 - [ ] 等待用户确认设计，开始实现feat-001
 
 ### Test Count
 - Before: 0 tests
-- After: 64 tests
+- After: 77 tests
 
 ---
 
