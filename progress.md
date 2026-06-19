@@ -52,6 +52,8 @@
 - [x] 实现feat-009前端界面 — Evidence: `frontend/`, `server.py`
 - [x] 前端界面单元测试 — Evidence: `tests/test_frontend.py` (8/8 pass)
 - [x] 修复embedding API兼容性问题 — Evidence: `src/core/knowledge_retriever.py`, `src/memory/warm_memory.py`
+- [x] 实现流式输出功能 — Evidence: `server.py` (SSE streaming), `frontend/js/app.js`
+- [x] 实现用户知识库上传功能 — Evidence: `server.py` (/api/knowledge/upload), `frontend/index.html`, `frontend/css/style.css`
 
 ### In Progress
 - [ ] 等待用户确认设计，开始实现feat-001

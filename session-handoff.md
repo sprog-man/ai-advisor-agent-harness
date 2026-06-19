@@ -2,7 +2,7 @@
 
 ## Current Objective
 
-- Goal: 实现feat-009前端界面（ChatGPT/DeepSeek风格）
+- Goal: 实现流式输出和用户知识库功能
 - Current status: 已完成
 - Branch: main
 
@@ -47,6 +47,9 @@
 - [x] 反馈循环学习机制单元测试（7/7 pass）
 - [x] 实现feat-009前端界面
 - [x] 前端界面单元测试（8/8 pass）
+- [x] 修复工具执行参数错误
+- [x] 实现流式输出功能
+- [x] 实现用户知识库上传功能
 
 ## Verification Evidence
 
