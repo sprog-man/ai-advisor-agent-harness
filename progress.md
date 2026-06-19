@@ -27,13 +27,18 @@
 - [x] 任务规划：分解项目为8个功能特性 — Evidence: `feature_list.json`
 - [x] 项目结构设计：模块化目录结构 — Evidence: `DECISIONS.md` (项目结构设计ADR)
 - [x] 系统架构设计：分层架构+事件驱动 — Evidence: `DECISIONS.md` (系统架构设计ADR)
+- [x] VS Code配置：创建.vscode/settings.json和tasks.json — Evidence: `.vscode/`
+- [x] 实现feat-001基础功能链路 — Evidence: `src/core/`, `src/orchestrator.py`, `main.py`
+- [x] 创建虚拟环境.venv — Evidence: `.venv/`
+- [x] 安装依赖 — Evidence: `requirements.txt`
+- [x] 编写测试 — Evidence: `tests/test_core.py` (18 tests pass)
 
 ### In Progress
 - [ ] 等待用户确认设计，开始实现feat-001
 
 ### Test Count
 - Before: 0 tests
-- After: 0 tests
+- After: 18 tests
 
 ---
 

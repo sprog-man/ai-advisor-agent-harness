@@ -1,10 +1,13 @@
 # Utility modules
-from .config import Config
-from .logger import Logger
-from .validators import Validators
+from .config import AppConfig, get_config, load_config
+from .logger import setup_logger
+from .validators import validate_user_input, validate_task_list
 
 __all__ = [
-    "Config",
-    "Logger",
-    "Validators",
+    "AppConfig",
+    "get_config",
+    "load_config",
+    "setup_logger",
+    "validate_user_input",
+    "validate_task_list",
 ]

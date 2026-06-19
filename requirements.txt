@@ -4,9 +4,11 @@
 openai>=1.0.0
 langchain>=0.1.0
 langchain-core>=0.1.0
+langchain-openai>=0.1.0
 
 # Vector Database
 chromadb>=0.4.0
+langchain-chroma>=0.1.0
 # milvus-lite>=2.0.0  # Alternative vector DB
 
 # Knowledge Graph

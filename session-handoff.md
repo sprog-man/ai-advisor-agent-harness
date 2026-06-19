@@ -2,7 +2,7 @@
 
 ## Current Objective
 
-- Goal: 完成harness工程部署、任务规划、项目结构设计、系统架构设计
+- Goal: 实现feat-001基础功能链路搭建
 - Current status: 已完成
 - Branch: main
 
@@ -24,6 +24,10 @@
 - [x] 任务规划：分解项目为8个功能特性
 - [x] 项目结构设计：模块化目录结构
 - [x] 系统架构设计：分层架构+事件驱动
+- [x] 创建虚拟环境.venv
+- [x] 安装依赖（requirements.txt）
+- [x] 实现feat-001基础功能链路
+- [x] 编写测试（18/18 pass）
 
 ## Verification Evidence
 
@@ -32,6 +36,8 @@
 | `make check` | 尚未运行（需要bash环境） | 需要在bash环境中测试 |
 | `make done` | 尚未运行（需要bash环境） | 需要在bash环境中测试 |
 | `git push` | 成功 | 已推送到GitHub仓库 |
+| `pytest tests/test_core.py` | 18/18 pass | 虚拟环境中运行 |
+| `src/core/` | 所有模块创建完成 | intent_parser, task_decomposer, knowledge_retriever, tool_executor, summarizer |
 
 ## Files Changed
 
@@ -44,6 +50,20 @@
 - done_check.sh
 - lint_check.sh
 - hooks/pre-commit
+- src/utils/config.py
+- src/utils/logger.py
+- src/utils/validators.py
+- src/utils/__init__.py
+- src/core/intent_parser.py
+- src/core/task_decomposer.py
+- src/core/knowledge_retriever.py
+- src/core/tool_executor.py
+- src/core/summarizer.py
+- src/orchestrator.py
+- main.py
+- tests/test_core.py
+- requirements.txt
+- .venv/ (virtual environment)
 
 ## Decisions Made
 
@@ -66,7 +86,8 @@
 
 ## Recommended Next Step
 
-1. 等待用户确认设计，开始实现feat-001基础功能链路
-2. 搭建开发环境，安装依赖（Python, 向量数据库, 知识图谱等）
-3. 创建项目目录结构
-4. 实现核心功能链路的各个模块
+1. feat-001已完成，开始实现feat-002热-温-冷三层记忆架构
+2. 配置实际的向量数据库（Chroma/Milvus）和知识图谱（Neo4j）
+3. 配置LLM API密钥（OPENAI_API_KEY环境变量）
+4. 集成外部搜索API到tool_executor
+5. 运行main.py进行端到端测试
