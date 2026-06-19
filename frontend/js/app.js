@@ -1,5 +1,5 @@
 /**
- * AI Advisor Agent - Frontend Application
+ * AI Advisor Agent - Frontend Application (with Streaming & Knowledge Base)
  */
 
 class ChatApp {
@@ -22,20 +22,22 @@ class ChatApp {
         this.welcomeScreen = document.getElementById('welcomeScreen');
         this.messageInput = document.getElementById('messageInput');
         this.sendBtn = document.getElementById('sendBtn');
+        this.uploadBtn = document.getElementById('uploadBtn');
+        this.fileInput = document.getElementById('fileInput');
+        this.knowledgeModal = document.getElementById('knowledgeModal');
+        this.closeModalBtn = document.getElementById('closeModalBtn');
+        this.knowledgeList = document.getElementById('knowledgeList');
     }
     
     initEventListeners() {
-        // 菜单按钮
         this.menuBtn.addEventListener('click', () => {
             this.sidebar.classList.toggle('visible');
         });
         
-        // 新对话按钮
         this.newChatBtn.addEventListener('click', () => {
             this.clearChat();
         });
         
-        // 输入框
         this.messageInput.addEventListener('input', () => {
             this.autoResize();
             this.updateSendButton();
@@ -48,12 +50,10 @@ class ChatApp {
             }
         });
         
-        // 发送按钮
         this.sendBtn.addEventListener('click', () => {
             this.sendMessage();
         });
         
-        // 快捷操作
         document.querySelectorAll('.quick-action').forEach(btn => {
             btn.addEventListener('click', () => {
                 const prompt = btn.dataset.prompt;
@@ -63,7 +63,25 @@ class ChatApp {
             });
         });
         
-        // 点击外部关闭侧边栏
+        if (this.uploadBtn) {
+            this.uploadBtn.addEventListener('click', () => {
+                this.knowledgeModal.classList.add('visible');
+                this.loadKnowledgeList();
+            });
+        }
+        
+        if (this.closeModalBtn) {
+            this.closeModalBtn.addEventListener('click', () => {
+                this.knowledgeModal.classList.remove('visible');
+            });
+        }
+        
+        if (this.fileInput) {
+            this.fileInput.addEventListener('change', (e) => {
+                this.uploadFile(e.target.files[0]);
+            });
+        }
+        
         document.addEventListener('click', (e) => {
             if (this.sidebar.classList.contains('visible') && 
                 !this.sidebar.contains(e.target) && 
@@ -98,28 +116,21 @@ class ChatApp {
         const content = this.messageInput.value.trim();
         if (!content || this.isStreaming) return;
         
-        // 隐藏欢迎界面
         this.welcomeScreen.style.display = 'none';
-        
-        // 添加用户消息
         this.addMessage('user', content);
         
-        // 清空输入框
         this.messageInput.value = '';
         this.autoResize();
         this.updateSendButton();
         
-        // 显示加载状态
         this.isStreaming = true;
         const assistantMessage = this.addMessage('assistant', '', true);
         
         try {
-            // 调用API
             await this.streamResponse(content, assistantMessage);
         } catch (error) {
             console.error('API Error:', error);
             this.updateMessageContent(assistantMessage, '抱歉，发生了错误。请稍后重试。');
-            this.addErrorToMessage(assistantMessage, error.message);
         } finally {
             this.isStreaming = false;
             this.updateSendButton();
@@ -128,29 +139,44 @@ class ChatApp {
     }
     
     async streamResponse(prompt, messageElement) {
-        try {
-            const response = await fetch(this.apiEndpoint, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    message: prompt,
-                    stream: false
-                })
-            });
-            
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            
-            const data = await response.json();
-            this.updateMessageContent(messageElement, data.response || data.content || '无响应');
-            
-        } catch (error) {
-            console.error('API Error:', error);
-            this.updateMessageContent(messageElement, '抱歉，发生了错误。请稍后重试。');
+        const response = await fetch(this.apiEndpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: prompt, stream: true })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
+        
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let fullContent = '';
+        
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            
+            const chunk = decoder.decode(value);
+            const lines = chunk.split('\n');
+            
+            for (const line of lines) {
+                if (line.startsWith('data: ')) {
+                    try {
+                        const data = JSON.parse(line.slice(6));
+                        if (data.content) {
+                            fullContent += data.content;
+                            this.updateMessageContent(messageElement, fullContent, true);
+                        }
+                        if (data.done) {
+                            this.removeTypingCursor(messageElement);
+                        }
+                    } catch (e) {}
+                }
+            }
+        }
+        
+        this.removeTypingCursor(messageElement);
     }
     
     addMessage(role, content, isLoading = false) {
@@ -173,7 +199,6 @@ class ChatApp {
         
         contentDiv.appendChild(bubbleDiv);
         
-        // 添加操作按钮（仅AI消息）
         if (role === 'assistant' && !isLoading) {
             const actionsDiv = document.createElement('div');
             actionsDiv.className = 'message-actions';
@@ -185,24 +210,13 @@ class ChatApp {
                     </svg>
                     复制
                 </button>
-                <button class="action-btn" onclick="app.regenerateMessage(this)">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M23 4v6h-6M1 20v-6h6"/>
-                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
-                    </svg>
-                    重新生成
-                </button>
             `;
             contentDiv.appendChild(actionsDiv);
         }
         
         messageDiv.appendChild(contentDiv);
         this.messagesList.appendChild(messageDiv);
-        
-        // 滚动到底部
         this.scrollToBottom();
-        
-        // 保存消息
         this.messages.push({ role, content });
         
         return bubbleDiv;
@@ -219,16 +233,12 @@ class ChatApp {
     
     removeTypingCursor(messageElement) {
         const cursor = messageElement.querySelector('.typing-cursor');
-        if (cursor) {
-            cursor.remove();
-        }
+        if (cursor) cursor.remove();
     }
     
     removeLoadingIndicator(messageElement) {
         const loader = messageElement.querySelector('.loading-indicator');
-        if (loader) {
-            loader.remove();
-        }
+        if (loader) loader.remove();
     }
     
     createLoadingIndicator() {
@@ -241,16 +251,8 @@ class ChatApp {
         `;
     }
     
-    addErrorToMessage(messageElement, error) {
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'error-message';
-        errorDiv.textContent = error;
-        messageElement.parentElement.appendChild(errorDiv);
-    }
-    
     renderMarkdown(text) {
         if (!text) return '';
-        
         if (typeof marked !== 'undefined') {
             try {
                 return marked.parse(text);
@@ -258,7 +260,6 @@ class ChatApp {
                 return this.escapeHtml(text);
             }
         }
-        
         return this.escapeHtml(text).replace(/\n/g, '<br>');
     }
     
@@ -292,38 +293,56 @@ class ChatApp {
         });
     }
     
-    regenerateMessage(button) {
-        // 找到上一条用户消息
-        const messages = Array.from(this.messagesList.querySelectorAll('.message'));
-        const currentMessage = button.closest('.message');
-        const currentIndex = messages.indexOf(currentMessage);
-        
-        let lastUserMessage = '';
-        for (let i = currentIndex - 1; i >= 0; i--) {
-            if (messages[i].classList.contains('user')) {
-                lastUserMessage = messages[i].querySelector('.message-bubble').textContent;
-                break;
-            }
-        }
-        
-        if (lastUserMessage) {
-            // 删除当前AI回复
-            currentMessage.remove();
-            this.messages.pop();
-            
-            // 重新发送
-            this.messageInput.value = lastUserMessage;
-            this.sendMessage();
-        }
-    }
-    
     clearChat() {
         this.messages = [];
         this.messagesList.innerHTML = '';
         this.welcomeScreen.style.display = 'flex';
         this.sidebar.classList.remove('visible');
     }
+    
+    async uploadFile(file) {
+        if (!file) return;
+        
+        const formData = new FormData();
+        formData.append('file', file);
+        
+        try {
+            const response = await fetch('/api/knowledge/upload', {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (response.ok) {
+                const result = await response.json();
+                alert(`文件上传成功: ${result.filename}`);
+                this.loadKnowledgeList();
+            } else {
+                alert('上传失败');
+            }
+        } catch (error) {
+            alert('上传错误: ' + error.message);
+        }
+        
+        this.fileInput.value = '';
+    }
+    
+    async loadKnowledgeList() {
+        try {
+            const response = await fetch('/api/knowledge/list');
+            const data = await response.json();
+            
+            if (this.knowledgeList) {
+                this.knowledgeList.innerHTML = data.files.map(f => `
+                    <div class="knowledge-item">
+                        <span class="file-name">${f.name}</span>
+                        <span class="file-size">${(f.size / 1024).toFixed(1)} KB</span>
+                    </div>
+                `).join('') || '<p class="no-files">暂无知识库文件</p>';
+            }
+        } catch (error) {
+            console.error('加载知识库列表失败:', error);
+        }
+    }
 }
 
-// 初始化应用
 const app = new ChatApp();

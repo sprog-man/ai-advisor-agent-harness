@@ -1,13 +1,15 @@
-"""FastAPI 服务器 - 提供前端静态文件和聊天API"""
+"""FastAPI 服务器 - 提供前端静态文件和聊天API（支持流式输出）"""
 
+import asyncio
+import json
 import os
 import sys
 from pathlib import Path
 from typing import Optional
 
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse, HTMLResponse
+from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
@@ -27,13 +29,14 @@ app.add_middleware(
 )
 
 orchestrator: Optional[Orchestrator] = None
-
 FRONTEND_DIR = Path(__file__).parent / "frontend"
+KNOWLEDGE_DIR = Path(__file__).parent / "data" / "knowledge"
+KNOWLEDGE_DIR.mkdir(parents=True, exist_ok=True)
 
 
 class ChatRequest(BaseModel):
     message: str
-    stream: bool = False
+    stream: bool = True
     session_id: str = "default"
 
 
@@ -50,12 +53,38 @@ async def startup_event():
     orchestrator = Orchestrator()
 
 
+async def generate_stream(message: str, session_id: str):
+    """生成流式响应"""
+    global orchestrator
+    
+    try:
+        result = await orchestrator.run(message)
+        content = result.summary.content
+        
+        chunk_size = 10
+        for i in range(0, len(content), chunk_size):
+            chunk = content[i:i + chunk_size]
+            yield f"data: {json.dumps({'content': chunk, 'done': False})}\n\n"
+            await asyncio.sleep(0.02)
+        
+        yield f"data: {json.dumps({'content': '', 'done': True, 'metadata': {'intent': result.intent.intent_type.value, 'confidence': result.intent.confidence}})}\n\n"
+        
+    except Exception as e:
+        yield f"data: {json.dumps({'error': str(e), 'done': True})}\n\n"
+
+
 @app.post("/api/chat")
 async def chat(request: ChatRequest):
     global orchestrator
     
     if not orchestrator:
         raise HTTPException(status_code=500, detail="Orchestrator not initialized")
+    
+    if request.stream:
+        return StreamingResponse(
+            generate_stream(request.message, request.session_id),
+            media_type="text/event-stream"
+        )
     
     try:
         result = await orchestrator.run(request.message)
@@ -71,6 +100,41 @@ async def chat(request: ChatRequest):
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/knowledge/upload")
+async def upload_knowledge(file: UploadFile = File(...)):
+    """上传知识库文件"""
+    try:
+        content = await file.read()
+        text = content.decode("utf-8")
+        
+        file_path = KNOWLEDGE_DIR / file.filename
+        file_path.write_text(text, encoding="utf-8")
+        
+        if orchestrator:
+            await orchestrator.knowledge_retriever.add_document(
+                text,
+                metadata={"source": file.filename, "type": "user_upload"}
+            )
+        
+        return {"status": "success", "filename": file.filename, "size": len(text)}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/knowledge/list")
+async def list_knowledge():
+    """列出知识库文件"""
+    files = []
+    for f in KNOWLEDGE_DIR.glob("*"):
+        if f.is_file():
+            files.append({
+                "name": f.name,
+                "size": f.stat().st_size,
+                "modified": f.stat().st_mtime
+            })
+    return {"files": files}
 
 
 @app.get("/api/health")

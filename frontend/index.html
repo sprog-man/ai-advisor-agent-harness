@@ -104,6 +104,14 @@
             <!-- 输入区域 -->
             <div class="input-container">
                 <div class="input-wrapper">
+                    <button class="upload-btn" id="uploadBtn" title="上传知识库">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="12" y1="18" x2="12" y2="12"/>
+                            <line x1="9" y1="15" x2="15" y2="15"/>
+                        </svg>
+                    </button>
                     <textarea 
                         id="messageInput" 
                         placeholder="输入你的问题..." 
@@ -116,11 +124,36 @@
                         </svg>
                     </button>
                 </div>
+                <input type="file" id="fileInput" accept=".txt,.md,.pdf" style="display: none;">
                 <div class="input-footer">
                     <span>AI Advisor Agent 可能会犯错，请核实重要信息</span>
                 </div>
             </div>
         </main>
+    </div>
+
+    <!-- 知识库模态框 -->
+    <div class="knowledge-modal" id="knowledgeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>知识库管理</h3>
+                <button class="close-btn" id="closeModalBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="17 8 12 3 7 8"/>
+                        <line x1="12" y1="3" x2="12" y2="15"/>
+                    </svg>
+                    <p>点击或拖拽文件到此处上传</p>
+                    <span>支持 TXT、MD 格式</span>
+                </div>
+                <div class="knowledge-list" id="knowledgeList">
+                    <p class="no-files">暂无知识库文件</p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="js/app.js"></script>
