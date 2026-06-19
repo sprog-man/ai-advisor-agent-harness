@@ -61,13 +61,19 @@ async def generate_stream(message: str, session_id: str):
         result = await orchestrator.run(message)
         content = result.summary.content
         
+        knowledge_sources = []
+        if result.knowledge.chunks:
+            for chunk in result.knowledge.chunks[:3]:
+                if chunk.source:
+                    knowledge_sources.append(chunk.source)
+        
         chunk_size = 10
         for i in range(0, len(content), chunk_size):
             chunk = content[i:i + chunk_size]
             yield f"data: {json.dumps({'content': chunk, 'done': False})}\n\n"
             await asyncio.sleep(0.02)
         
-        yield f"data: {json.dumps({'content': '', 'done': True, 'metadata': {'intent': result.intent.intent_type.value, 'confidence': result.intent.confidence}})}\n\n"
+        yield f"data: {json.dumps({'content': '', 'done': True, 'metadata': {'intent': result.intent.intent_type.value, 'confidence': result.intent.confidence, 'knowledge_used': len(result.knowledge.chunks) > 0, 'knowledge_sources': knowledge_sources}})}\n\n"
         
     except Exception as e:
         yield f"data: {json.dumps({'error': str(e), 'done': True})}\n\n"
@@ -89,6 +95,12 @@ async def chat(request: ChatRequest):
     try:
         result = await orchestrator.run(request.message)
         
+        knowledge_sources = []
+        if result.knowledge.chunks:
+            for chunk in result.knowledge.chunks[:3]:
+                if chunk.source:
+                    knowledge_sources.append(chunk.source)
+        
         return ChatResponse(
             response=result.summary.content,
             session_id=request.session_id,
@@ -96,6 +108,8 @@ async def chat(request: ChatRequest):
                 "intent": result.intent.intent_type.value,
                 "confidence": result.intent.confidence,
                 "elapsed_ms": result.elapsed_ms,
+                "knowledge_used": len(result.knowledge.chunks) > 0,
+                "knowledge_sources": knowledge_sources,
             }
         )
     except Exception as e:
@@ -135,6 +149,21 @@ async def list_knowledge():
                 "modified": f.stat().st_mtime
             })
     return {"files": files}
+
+
+@app.get("/api/knowledge/status")
+async def knowledge_status():
+    """获取知识库状态"""
+    files = list(KNOWLEDGE_DIR.glob("*"))
+    file_count = len([f for f in files if f.is_file()])
+    total_size = sum(f.stat().st_size for f in files if f.is_file())
+    
+    return {
+        "file_count": file_count,
+        "total_size": total_size,
+        "total_size_kb": round(total_size / 1024, 2),
+        "embedding_available": orchestrator.knowledge_retriever._vector_store is not None if orchestrator else False
+    }
 
 
 @app.get("/api/health")

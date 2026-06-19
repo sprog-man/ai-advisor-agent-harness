@@ -179,6 +179,7 @@ class ChatApp {
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
         let fullContent = '';
+        let metadata = null;
         
         while (true) {
             const { done, value } = await reader.read();
@@ -195,12 +196,28 @@ class ChatApp {
                             fullContent += data.content;
                             this.updateMessageContent(messageElement, fullContent, true);
                         }
+                        if (data.done && data.metadata) {
+                            metadata = data.metadata;
+                        }
                         if (data.done) {
                             this.removeTypingCursor(messageElement);
                         }
                     } catch (e) {}
                 }
             }
+        }
+        
+        if (metadata && metadata.knowledge_used) {
+            const sourceInfo = document.createElement('div');
+            sourceInfo.className = 'knowledge-source';
+            sourceInfo.innerHTML = `
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                </svg>
+                <span>参考了知识库${metadata.knowledge_sources.length > 0 ? ': ' + metadata.knowledge_sources.join(', ') : ''}</span>
+            `;
+            messageElement.parentElement.appendChild(sourceInfo);
         }
         
         this.removeTypingCursor(messageElement);
