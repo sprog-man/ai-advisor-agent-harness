@@ -2,7 +2,7 @@
 
 ## Current Objective
 
-- Goal: 实现feat-001基础功能链路搭建
+- Goal: 实现feat-002热-温-冷三层记忆架构
 - Current status: 已完成
 - Branch: main
 
@@ -27,7 +27,12 @@
 - [x] 创建虚拟环境.venv
 - [x] 安装依赖（requirements.txt）
 - [x] 实现feat-001基础功能链路
-- [x] 编写测试（18/18 pass）
+- [x] 编写单元测试（18/18 pass）
+- [x] 配置.env文件
+- [x] 集成测试（真实API 3/3 pass）
+- [x] 实现feat-002三层记忆架构
+- [x] 记忆模块单元测试（14/14 pass）
+- [x] 记忆模块集成测试（4/4 pass）
 
 ## Verification Evidence
 
@@ -37,7 +42,9 @@
 | `make done` | 尚未运行（需要bash环境） | 需要在bash环境中测试 |
 | `git push` | 成功 | 已推送到GitHub仓库 |
 | `pytest tests/test_core.py` | 18/18 pass | 虚拟环境中运行 |
-| `src/core/` | 所有模块创建完成 | intent_parser, task_decomposer, knowledge_retriever, tool_executor, summarizer |
+| `pytest tests/test_memory.py` | 14/14 pass | 虚拟环境中运行 |
+| `tests/test_integration.py` | 3/3 pass | 真实API测试 |
+| `tests/test_memory_integration.py` | 4/4 pass | 真实API测试（embedding API不可用时降级） |
 
 ## Files Changed
 
@@ -62,8 +69,17 @@
 - src/orchestrator.py
 - main.py
 - tests/test_core.py
+- tests/test_integration.py
+- tests/test_memory.py
+- tests/test_memory_integration.py
 - requirements.txt
+- .env (gitignored)
 - .venv/ (virtual environment)
+- src/memory/hot_memory.py
+- src/memory/warm_memory.py
+- src/memory/cold_memory.py
+- src/memory/memory_manager.py
+- src/memory/__init__.py
 
 ## Decisions Made
 
@@ -86,8 +102,7 @@
 
 ## Recommended Next Step
 
-1. feat-001已完成，开始实现feat-002热-温-冷三层记忆架构
-2. 配置实际的向量数据库（Chroma/Milvus）和知识图谱（Neo4j）
-3. 配置LLM API密钥（OPENAI_API_KEY环境变量）
-4. 集成外部搜索API到tool_executor
-5. 运行main.py进行端到端测试
+1. feat-002已完成，开始实现feat-003记忆记录与检索流程
+2. 解决embedding API问题（配置可用的embedding模型或使用本地embedding）
+3. 启动Chroma向量库服务以支持完整的向量搜索功能
+4. 开始实现feat-004反思机制

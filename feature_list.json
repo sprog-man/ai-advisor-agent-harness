@@ -23,7 +23,7 @@
     {
       "id": "feat-002",
       "name": "热-温-冷三层记忆架构",
-      "status": "pending",
+      "status": "done",
       "description": "实现热记忆（当前对话上下文）、温记忆（向量库+知识图谱双模存储）、冷记忆（原始数据存储）的三层记忆系统",
       "dependencies": ["feat-001"],
       "verification": "记忆读写性能测试，数据持久化验证",
@@ -34,7 +34,7 @@
         "冷记忆能存储原始数据",
         "三层记忆能正确联动"
       ],
-      "evidence": []
+      "evidence": ["tests/test_memory.py: 14/14 pass", "tests/test_memory_integration.py: 4/4 pass", "src/memory/hot_memory.py", "src/memory/warm_memory.py", "src/memory/cold_memory.py", "src/memory/memory_manager.py"]
     },
     {
       "id": "feat-003",

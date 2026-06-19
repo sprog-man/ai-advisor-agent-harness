@@ -1,14 +1,17 @@
 # Memory system components
-from .hot_memory import HotMemory
-from .warm_memory import WarmMemory
-from .cold_memory import ColdMemory
-from .memory_recorder import MemoryRecorder
-from .memory_retriever import MemoryRetriever
+from .hot_memory import HotMemory, Message, ConversationContext
+from .warm_memory import WarmMemory, MemoryEntry, Triple
+from .cold_memory import ColdMemory, RawRecord
+from .memory_manager import MemoryManager
 
 __all__ = [
     "HotMemory",
+    "Message",
+    "ConversationContext",
     "WarmMemory",
+    "MemoryEntry",
+    "Triple",
     "ColdMemory",
-    "MemoryRecorder",
-    "MemoryRetriever",
+    "RawRecord",
+    "MemoryManager",
 ]
