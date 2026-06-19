@@ -41,13 +41,15 @@
 - [x] 记忆记录与检索单元测试 — Evidence: `tests/test_memory_retrieval.py` (7/7 pass)
 - [x] 实现feat-004反思机制 — Evidence: `src/reflection/`
 - [x] 反思机制单元测试 — Evidence: `tests/test_reflection.py` (13/13 pass)
+- [x] 实现feat-005 Bad Case闭环学习 — Evidence: `src/learning/`
+- [x] Bad Case闭环学习单元测试 — Evidence: `tests/test_learning.py` (12/12 pass)
 
 ### In Progress
 - [ ] 等待用户确认设计，开始实现feat-001
 
 ### Test Count
 - Before: 0 tests
-- After: 52 tests
+- After: 64 tests
 
 ---
 
