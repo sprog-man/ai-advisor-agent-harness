@@ -765,6 +765,12 @@ html, body {
     background: rgba(16, 163, 127, 0.05);
 }
 
+.upload-area.drag-over {
+    border-color: var(--accent-primary);
+    background: rgba(16, 163, 127, 0.1);
+    transform: scale(1.02);
+}
+
 .upload-area svg {
     color: var(--text-tertiary);
     margin-bottom: 12px;

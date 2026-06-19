@@ -23,10 +23,11 @@ class ChatApp {
         this.messageInput = document.getElementById('messageInput');
         this.sendBtn = document.getElementById('sendBtn');
         this.uploadBtn = document.getElementById('uploadBtn');
-        this.fileInput = document.getElementById('fileInput');
         this.knowledgeModal = document.getElementById('knowledgeModal');
         this.closeModalBtn = document.getElementById('closeModalBtn');
         this.knowledgeList = document.getElementById('knowledgeList');
+        this.uploadArea = document.getElementById('uploadArea');
+        this.modalFileInput = document.getElementById('modalFileInput');
     }
     
     initEventListeners() {
@@ -76,9 +77,35 @@ class ChatApp {
             });
         }
         
-        if (this.fileInput) {
-            this.fileInput.addEventListener('change', (e) => {
-                this.uploadFile(e.target.files[0]);
+        if (this.uploadArea) {
+            this.uploadArea.addEventListener('click', () => {
+                this.modalFileInput.click();
+            });
+            
+            this.uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                this.uploadArea.classList.add('drag-over');
+            });
+            
+            this.uploadArea.addEventListener('dragleave', () => {
+                this.uploadArea.classList.remove('drag-over');
+            });
+            
+            this.uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                this.uploadArea.classList.remove('drag-over');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    this.uploadFile(files[0]);
+                }
+            });
+        }
+        
+        if (this.modalFileInput) {
+            this.modalFileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    this.uploadFile(e.target.files[0]);
+                }
             });
         }
         
@@ -323,7 +350,9 @@ class ChatApp {
             alert('上传错误: ' + error.message);
         }
         
-        this.fileInput.value = '';
+        if (this.modalFileInput) {
+            this.modalFileInput.value = '';
+        }
     }
     
     async loadKnowledgeList() {
