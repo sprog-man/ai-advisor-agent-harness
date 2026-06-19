@@ -51,6 +51,7 @@
 - [x] 反馈循环学习机制单元测试 — Evidence: `tests/test_feedback_loop_integration.py` (7/7 pass)
 - [x] 实现feat-009前端界面 — Evidence: `frontend/`, `server.py`
 - [x] 前端界面单元测试 — Evidence: `tests/test_frontend.py` (8/8 pass)
+- [x] 修复embedding API兼容性问题 — Evidence: `src/core/knowledge_retriever.py`, `src/memory/warm_memory.py`
 
 ### In Progress
 - [ ] 等待用户确认设计，开始实现feat-001

@@ -1,5 +1,6 @@
 """知识检索模块 — 从向量知识库检索相关知识"""
 
+import os
 from dataclasses import dataclass, field
 from typing import Any, Optional
 
@@ -76,7 +77,17 @@ class KnowledgeRetriever:
             from langchain_openai import OpenAIEmbeddings
 
             cfg = self.config.vector_db
-            embeddings = OpenAIEmbeddings(api_key=self.config.llm.api_key)
+            embedding_model = os.getenv("EMBEDDING_MODEL", "")
+            
+            if not embedding_model:
+                logger.info("未配置embedding模型，跳过向量库初始化")
+                return None
+                
+            embeddings = OpenAIEmbeddings(
+                model=embedding_model,
+                api_key=self.config.llm.api_key,
+                base_url=self.config.llm.base_url,
+            )
             self._vector_store = Chroma(
                 collection_name=cfg.collection_name,
                 embedding_function=embeddings,
@@ -86,13 +97,5 @@ class KnowledgeRetriever:
             logger.info("向量库连接成功: %s:%d", cfg.host, cfg.port)
             return self._vector_store
         except Exception as e:
-            logger.warning("向量库连接失败，使用内存模式: %s", e)
-            try:
-                from langchain_chroma import Chroma
-                from langchain_openai import OpenAIEmbeddings
-                embeddings = OpenAIEmbeddings(api_key=self.config.llm.api_key)
-                self._vector_store = Chroma(embedding_function=embeddings)
-                return self._vector_store
-            except Exception as e2:
-                logger.error("内存向量库初始化失败: %s", e2)
-                return None
+            logger.warning("向量库初始化失败: %s", e)
+            return None

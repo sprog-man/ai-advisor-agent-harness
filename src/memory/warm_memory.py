@@ -173,19 +173,16 @@ class WarmMemory:
             )
             return self._vector_store
         except Exception as e:
-            logger.warning("向量库连接失败，使用内存模式: %s", e)
-            try:
-                from langchain_chroma import Chroma
-                embeddings = self._get_embeddings()
-                self._vector_store = Chroma(embedding_function=embeddings)
-                return self._vector_store
-            except Exception as e2:
-                logger.error("内存向量库初始化失败: %s", e2)
-                return None
+            logger.warning("向量库连接失败: %s", e)
+            return None
 
     def _get_embeddings(self):
         import os
-        embedding_model = os.getenv("EMBEDDING_MODEL", "text-embedding-ada-002")
+        embedding_model = os.getenv("EMBEDDING_MODEL", "")
+        
+        if not embedding_model:
+            raise ValueError("未配置embedding模型")
+            
         embedding_provider = os.getenv("EMBEDDING_PROVIDER", "openai")
 
         if embedding_provider == "openai":

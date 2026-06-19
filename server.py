@@ -5,13 +5,13 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse, StreamingResponse
+from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-sys.path.insert(0, str(Path(__file__).parent.parent))
+sys.path.insert(0, str(Path(__file__).parent))
 
 from src.orchestrator import Orchestrator
 from src.utils.config import load_config
@@ -27,6 +27,8 @@ app.add_middleware(
 )
 
 orchestrator: Optional[Orchestrator] = None
+
+FRONTEND_DIR = Path(__file__).parent / "frontend"
 
 
 class ChatRequest(BaseModel):
@@ -46,12 +48,6 @@ async def startup_event():
     global orchestrator
     load_config()
     orchestrator = Orchestrator()
-
-
-@app.get("/")
-async def root():
-    frontend_path = Path(__file__).parent / "frontend" / "index.html"
-    return FileResponse(frontend_path)
 
 
 @app.post("/api/chat")
@@ -82,10 +78,23 @@ async def health():
     return {"status": "healthy", "version": "1.0.0"}
 
 
-frontend_path = Path(__file__).parent / "frontend"
-app.mount("/", StaticFiles(directory=str(frontend_path), html=True), name="frontend")
+@app.get("/")
+async def root():
+    index_path = FRONTEND_DIR / "index.html"
+    return FileResponse(index_path)
+
+
+@app.get("/{path:path}")
+async def serve_frontend(path: str):
+    file_path = FRONTEND_DIR / path
+    if file_path.exists() and file_path.is_file():
+        return FileResponse(file_path)
+    index_path = FRONTEND_DIR / "index.html"
+    return FileResponse(index_path)
 
 
 if __name__ == "__main__":
     import uvicorn
+    print("启动 AI Advisor Agent 服务器...")
+    print("访问 http://localhost:8080")
     uvicorn.run(app, host="0.0.0.0", port=8080)
