@@ -3,6 +3,7 @@ from .bad_case_catcher import BadCaseCatcher, BadCase, FeedbackSource, BadCaseSe
 from .case_classifier import CaseClassifier, ClassificationResult, CaseCategory
 from .feedback_loop import FeedbackLoop, Rule, FeedbackLoopResult
 from .rule_extractor import RuleExtractor, GoldenRule, ExtractionResult
+from .feedback_loop_orchestrator import FeedbackLoopOrchestrator, EvolutionResult, SystemState
 
 __all__ = [
     "BadCaseCatcher",
@@ -18,4 +19,7 @@ __all__ = [
     "RuleExtractor",
     "GoldenRule",
     "ExtractionResult",
+    "FeedbackLoopOrchestrator",
+    "EvolutionResult",
+    "SystemState",
 ]

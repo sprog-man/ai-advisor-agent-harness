@@ -2,7 +2,7 @@
   "version": "1.0",
   "description": "AI Advisor Agent — Feature Backlog",
   "active_feature": "feat-001",
-  "all_completed": false,
+  "all_completed": true,
   "features": [
     {
       "id": "feat-001",
@@ -116,7 +116,7 @@
     {
       "id": "feat-008",
       "name": "反馈循环学习机制",
-      "status": "pending",
+      "status": "done",
       "description": "实现接收反馈→反思→提炼规则→后续遵循的自我进化闭环",
       "dependencies": ["feat-002", "feat-004"],
       "verification": "反馈处理准确率测试，规则提炼效果测试",
@@ -126,7 +126,7 @@
         "规则能被后续任务遵循",
         "进化闭环能持续优化"
       ],
-      "evidence": []
+      "evidence": ["tests/test_feedback_loop_integration.py: 7/7 pass", "src/learning/feedback_loop_orchestrator.py"]
     }
   ]
 }

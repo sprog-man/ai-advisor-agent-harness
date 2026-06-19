@@ -47,13 +47,15 @@
 - [x] 灰度测试与熔断机制单元测试 — Evidence: `tests/test_production.py` (13/13 pass)
 - [x] 实现feat-007权限控制与并发优化 — Evidence: `src/production/permission_control.py`, `src/production/concurrency_optimizer.py`
 - [x] 权限控制与并发优化单元测试 — Evidence: `tests/test_permission_concurrency.py` (14/14 pass)
+- [x] 实现feat-008反馈循环学习机制 — Evidence: `src/learning/feedback_loop_orchestrator.py`
+- [x] 反馈循环学习机制单元测试 — Evidence: `tests/test_feedback_loop_integration.py` (7/7 pass)
 
 ### In Progress
 - [ ] 等待用户确认设计，开始实现feat-001
 
 ### Test Count
 - Before: 0 tests
-- After: 91 tests
+- After: 98 tests
 
 ---
 
