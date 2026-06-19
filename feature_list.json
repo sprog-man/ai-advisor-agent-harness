@@ -102,7 +102,7 @@
     {
       "id": "feat-007",
       "name": "权限控制与并发优化",
-      "status": "pending",
+      "status": "done",
       "description": "实现权限控制系统，优化并发性能，处理上下文窗口限制",
       "dependencies": ["feat-001"],
       "verification": "权限控制测试，并发性能测试",
@@ -111,7 +111,7 @@
         "并发处理性能达标",
         "上下文窗口限制处理得当"
       ],
-      "evidence": []
+      "evidence": ["tests/test_permission_concurrency.py: 14/14 pass", "src/production/permission_control.py", "src/production/concurrency_optimizer.py"]
     },
     {
       "id": "feat-008",
