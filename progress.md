@@ -39,13 +39,15 @@
 - [x] 记忆模块集成测试 — Evidence: `tests/test_memory_integration.py` (4/4 pass)
 - [x] 实现feat-003记忆记录与检索流程 — Evidence: `src/memory/memory_recorder.py`, `src/memory/memory_retriever.py`
 - [x] 记忆记录与检索单元测试 — Evidence: `tests/test_memory_retrieval.py` (7/7 pass)
+- [x] 实现feat-004反思机制 — Evidence: `src/reflection/`
+- [x] 反思机制单元测试 — Evidence: `tests/test_reflection.py` (13/13 pass)
 
 ### In Progress
 - [ ] 等待用户确认设计，开始实现feat-001
 
 ### Test Count
 - Before: 0 tests
-- After: 39 tests
+- After: 52 tests
 
 ---
 

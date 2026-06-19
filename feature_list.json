@@ -55,7 +55,7 @@
     {
       "id": "feat-004",
       "name": "反思机制实现",
-      "status": "pending",
+      "status": "done",
       "description": "实现局部重试与自我修正、Agent协商与辩论、全局回退与人工介入的反思机制",
       "dependencies": ["feat-001"],
       "verification": "冲突检测准确率测试，重试成功率测试",
@@ -66,7 +66,7 @@
         "全局回退机制正常",
         "人工介入接口可用"
       ],
-      "evidence": []
+      "evidence": ["tests/test_reflection.py: 13/13 pass", "src/reflection/conflict_detector.py", "src/reflection/self_correction.py", "src/reflection/agent_debate.py", "src/reflection/fallback_handler.py"]
     },
     {
       "id": "feat-005",
