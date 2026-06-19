@@ -74,20 +74,13 @@ class KnowledgeRetriever:
 
         try:
             from langchain_chroma import Chroma
-            from langchain_openai import OpenAIEmbeddings
 
             cfg = self.config.vector_db
-            embedding_model = os.getenv("EMBEDDING_MODEL", "")
+            embeddings = self._get_embeddings()
             
-            if not embedding_model:
-                logger.info("未配置embedding模型，跳过向量库初始化")
+            if embeddings is None:
                 return None
-                
-            embeddings = OpenAIEmbeddings(
-                model=embedding_model,
-                api_key=self.config.llm.api_key,
-                base_url=self.config.llm.base_url,
-            )
+
             self._vector_store = Chroma(
                 collection_name=cfg.collection_name,
                 embedding_function=embeddings,
@@ -98,4 +91,39 @@ class KnowledgeRetriever:
             return self._vector_store
         except Exception as e:
             logger.warning("向量库初始化失败: %s", e)
+            return None
+    
+    def _get_embeddings(self):
+        import os
+        embedding_model = os.getenv("EMBEDDING_MODEL", "")
+        embedding_provider = os.getenv("EMBEDDING_PROVIDER", "openai")
+        embedding_api_key = os.getenv("EMBEDDING_API_KEY", "")
+        embedding_base_url = os.getenv("EMBEDDING_BASE_URL", "")
+        
+        if not embedding_model:
+            logger.info("未配置embedding模型，跳过向量库初始化")
+            return None
+        
+        try:
+            if embedding_provider == "dashscope":
+                from langchain_community.embeddings import DashScopeEmbeddings
+                return DashScopeEmbeddings(
+                    model=embedding_model,
+                    dashscope_api_key=embedding_api_key,
+                )
+            elif embedding_provider == "openai":
+                from langchain_openai import OpenAIEmbeddings
+                return OpenAIEmbeddings(
+                    model=embedding_model,
+                    api_key=embedding_api_key or self.config.llm.api_key,
+                    base_url=embedding_base_url or self.config.llm.base_url,
+                )
+            else:
+                from langchain_openai import OpenAIEmbeddings
+                return OpenAIEmbeddings(
+                    model=embedding_model,
+                    api_key=embedding_api_key or self.config.llm.api_key,
+                )
+        except Exception as e:
+            logger.warning("Embedding初始化失败: %s", e)
             return None

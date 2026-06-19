@@ -179,22 +179,29 @@ class WarmMemory:
     def _get_embeddings(self):
         import os
         embedding_model = os.getenv("EMBEDDING_MODEL", "")
+        embedding_provider = os.getenv("EMBEDDING_PROVIDER", "openai")
+        embedding_api_key = os.getenv("EMBEDDING_API_KEY", "")
+        embedding_base_url = os.getenv("EMBEDDING_BASE_URL", "")
         
         if not embedding_model:
             raise ValueError("未配置embedding模型")
-            
-        embedding_provider = os.getenv("EMBEDDING_PROVIDER", "openai")
-
-        if embedding_provider == "openai":
+        
+        if embedding_provider == "dashscope":
+            from langchain_community.embeddings import DashScopeEmbeddings
+            return DashScopeEmbeddings(
+                model=embedding_model,
+                dashscope_api_key=embedding_api_key,
+            )
+        elif embedding_provider == "openai":
             from langchain_openai import OpenAIEmbeddings
             return OpenAIEmbeddings(
                 model=embedding_model,
-                api_key=self.config.llm.api_key,
-                base_url=self.config.llm.base_url,
+                api_key=embedding_api_key or self.config.llm.api_key,
+                base_url=embedding_base_url or self.config.llm.base_url,
             )
         else:
             from langchain_openai import OpenAIEmbeddings
             return OpenAIEmbeddings(
                 model=embedding_model,
-                api_key=self.config.llm.api_key,
+                api_key=embedding_api_key or self.config.llm.api_key,
             )
