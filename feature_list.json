@@ -19,6 +19,114 @@
         "最终总结输出符合预期"
       ],
       "evidence": []
+    },
+    {
+      "id": "feat-002",
+      "name": "热-温-冷三层记忆架构",
+      "status": "pending",
+      "description": "实现热记忆（当前对话上下文）、温记忆（向量库+知识图谱双模存储）、冷记忆（原始数据存储）的三层记忆系统",
+      "dependencies": ["feat-001"],
+      "verification": "记忆读写性能测试，数据持久化验证",
+      "done_criteria": [
+        "热记忆能快速存取当前对话上下文",
+        "温记忆能通过向量库进行语义搜索",
+        "温记忆能通过知识图谱进行精确查询",
+        "冷记忆能存储原始数据",
+        "三层记忆能正确联动"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "feat-003",
+      "name": "记忆记录与检索流程",
+      "status": "pending",
+      "description": "实现记忆记录（LLM提取关键信息转向量和三元组）和检索（向量库语义搜索+知识图谱精确查询，结果融合）流程",
+      "dependencies": ["feat-002"],
+      "verification": "记忆记录准确率测试，检索相关性测试",
+      "done_criteria": [
+        "LLM能正确提取关键信息",
+        "信息能正确转向量和三元组",
+        "向量库语义搜索返回相关结果",
+        "知识图谱精确查询返回准确结果",
+        "检索结果能正确融合"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "feat-004",
+      "name": "反思机制实现",
+      "status": "pending",
+      "description": "实现局部重试与自我修正、Agent协商与辩论、全局回退与人工介入的反思机制",
+      "dependencies": ["feat-001"],
+      "verification": "冲突检测准确率测试，重试成功率测试",
+      "done_criteria": [
+        "能检测到逻辑冲突",
+        "局部重试机制正常工作",
+        "Agent协商辩论流程正常",
+        "全局回退机制正常",
+        "人工介入接口可用"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "feat-005",
+      "name": "Bad Case闭环学习",
+      "status": "pending",
+      "description": "实现Bad Case捕获（用户反馈、系统监控、行为捕捉）、分类治理（事实错误、行为模式、风格偏好）、金标评测集与回归测试",
+      "dependencies": ["feat-001"],
+      "verification": "Bad Case捕获率测试，分类准确率测试",
+      "done_criteria": [
+        "用户反馈机制可用",
+        "系统监控能自动抓错",
+        "用户行为捕捉功能正常",
+        "Bad Case分类准确",
+        "金标评测集能防止重复犯错"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "feat-006",
+      "name": "灰度测试与熔断机制",
+      "status": "pending",
+      "description": "实现影子模式评估、小流量切换、逐步放大的灰度测试，以及错误率/响应时间熔断机制",
+      "dependencies": ["feat-001"],
+      "verification": "灰度测试流程验证，熔断机制触发测试",
+      "done_criteria": [
+        "影子模式能对比新旧版本",
+        "小流量切换功能正常",
+        "熔断机制能自动触发",
+        "回滚功能正常"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "feat-007",
+      "name": "权限控制与并发优化",
+      "status": "pending",
+      "description": "实现权限控制系统，优化并发性能，处理上下文窗口限制",
+      "dependencies": ["feat-001"],
+      "verification": "权限控制测试，并发性能测试",
+      "done_criteria": [
+        "权限控制粒度合理",
+        "并发处理性能达标",
+        "上下文窗口限制处理得当"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "feat-008",
+      "name": "反馈循环学习机制",
+      "status": "pending",
+      "description": "实现接收反馈→反思→提炼规则→后续遵循的自我进化闭环",
+      "dependencies": ["feat-002", "feat-004"],
+      "verification": "反馈处理准确率测试，规则提炼效果测试",
+      "done_criteria": [
+        "反馈接收机制正常",
+        "反思能提炼有效规则",
+        "规则能被后续任务遵循",
+        "进化闭环能持续优化"
+      ],
+      "evidence": []
     }
   ]
 }
